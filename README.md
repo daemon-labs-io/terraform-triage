@@ -1,4 +1,4 @@
-# 🩺 Terraform Triage: Debug a Broken CI/CD Pipeline
+# 🩺 Terraform Triage: Debug a Broken CI/CD Pipeline:
 
 ## 🛑 Prerequisites
 
