@@ -15,7 +15,7 @@ data "aws_ami" "al2023" {
 
   filter {
     name   = "name"
-    values = ["al2023-ami-2022.*-x86_64"]
+    values = ["al2023-ami-2023.*-x86_64"]
   }
 
   filter {
@@ -30,7 +30,7 @@ data "aws_ami" "al2023" {
 }
 
 resource "aws_iam_role" "ec2" {
-  name = "${var.name_prefex}-ec2-role"
+  name = "${var.name_prefix}-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -43,8 +43,8 @@ resource "aws_iam_role" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm" {
-    role       = aws_iam_role.ec2.name
-    policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  role       = aws_iam_role.ec2.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role_policy" "ec2_admin" {
@@ -68,14 +68,14 @@ resource "aws_iam_instance_profile" "ec2" {
 
 resource "aws_security_group" "web" {
   name        = "${var.name_prefix}-web"
-  description = "Allow HTTP inbound, all outbound."  
+  description = "Allow HTTP inbound, all outbound."
   vpc_id      = data.aws_vpc.default.id
 
   ingress {
     description = "HTTP from anywhere"
-    from_port = 8080
-    to_port = 8080
-    protocol = "tcp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -87,16 +87,13 @@ resource "aws_security_group" "web" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "aws_instance" "web" {
   ami                    = data.aws_ami.al2023.id
-  instance_typ           = var.instance_type
+  instance_type          = var.instance_type
   subnet_id              = data.aws_subnets.default.ids[0]
-  vpc_security_group_ids = aws_security_group.web.id
+  vpc_security_group_ids = [aws_security_group.web.id]
   iam_instance_profile   = aws_iam_instance_profile.ec2.name
 
   user_data = <<-EOT
