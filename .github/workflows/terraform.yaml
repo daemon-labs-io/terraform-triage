@@ -41,7 +41,6 @@ jobs:
       - name: Terraform plan
         run: terraform plan -no-color -out=tfplan
       - name: Terraform apply
-        if: github.event_name == 'push'
         run: terraform apply -no-color -auto-approve tfplan
       - name: Smoke test web endpoint
         run: |
