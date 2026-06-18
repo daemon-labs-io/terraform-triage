@@ -43,8 +43,8 @@ resource "aws_iam_role" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm" {
-    role       = aws_iam_role.ec2.name
-    policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  role       = aws_iam_role.ec2.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role_policy" "ec2_admin" {
@@ -68,14 +68,14 @@ resource "aws_iam_instance_profile" "ec2" {
 
 resource "aws_security_group" "web" {
   name        = "${var.name_prefix}-web"
-  description = "Allow HTTP inbound, all outbound."  
+  description = "Allow HTTP inbound, all outbound."
   vpc_id      = data.aws_vpc.default.id
 
   ingress {
     description = "HTTP from anywhere"
-    from_port = 8080
-    to_port = 8080
-    protocol = "tcp"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
