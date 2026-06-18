@@ -3,7 +3,7 @@ repository:
   description: "🩺 Terraform Triage: Debug a Broken CI/CD Pipeline"
   homepage: https://github.com/daemon-labs-io/terraform-triage
   topics: daemon-labs, daemon-labs-io, terraform-triage
-  private: true
+  private: false
   has_issues: true
   has_projects: false
   has_wiki: false
