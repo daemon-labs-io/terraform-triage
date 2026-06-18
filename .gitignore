@@ -1,0 +1,14 @@
+*
+!.github
+!.github/**/*
+!.gitignore
+!*.md
+!prerequisites
+!prerequisites/**/*
+!src
+!src/**
+!docker-compose.yaml
+!.env.example
+
+.terraform
+*.tfstate*

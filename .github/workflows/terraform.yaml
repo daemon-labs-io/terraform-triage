@@ -1,0 +1,60 @@
+---
+# Inherited from the old platform-pipelines repo. Do not edit without
+# consulting the platform team.
+name: Terraform
+on:
+  pull_request: null
+  workflow_dispatch: null
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+  id-token: write
+env:
+  TF_CLI_ARGS_init: -backend-config=key=participants/${{ github.actor }}/terraform.tfstate
+  TF_VAR_name_prefix: triage-${{ github.actor }}
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/GitHubActions-TerraformTraige
+          aws-region: eu-west-2
+      - name: Terraform format check
+        run: terraform fmt -check -recursive
+      - name: Terraform init
+        run: terraform init
+      - name: Terraform validate
+        run: terraform validate
+      - name: Terraform plan
+        run: terraform plan -no-color -out=tfplan
+      - name: Terraform apply
+        if: github.event_name == 'push'
+        run: terraform apply -no-color -auto-approve tfplan
+      - name: Smoke test web endpoint
+        run: |
+          URL=$(terraform output -raw web_url)
+          echo "Probing ${URL} (up to ~3 minutes for instance + user_data)..."
+          for i in $(seq 1 36); do
+            if curl -fsS --max-time 5 "$URL"; then
+              echo
+              echo "✅ ${URL} responded on attempt ${i}"
+              exit 0
+            fi
+            echo "Attempt ${i}/36 not ready yet, retrying in 5s..."
+            sleep 5
+          done
+          echo "❌ ${URL} did not respond within timeout"
+          exit 1

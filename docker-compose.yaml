@@ -1,0 +1,16 @@
+---
+services:
+  aws-cli:
+    image: amazon/aws-cli
+    env_file:
+      - .env
+  terraform:
+    image: hashicorp/terraform:1.15
+    working_dir: /terraform
+    volumes:
+      - ./src:/terraform
+    env_file:
+      - .env
+    environment:
+      TF_CLI_ARGS_init: '-backend-config=key=participants/${PARTICIPANT_ID}/terraform.tfstate'
+      TF_VAR_name_prefix: 'triage-${PARTICIPANT_ID}'
