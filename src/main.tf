@@ -30,7 +30,7 @@ data "aws_ami" "al2023" {
 }
 
 resource "aws_iam_role" "ec2" {
-  name = "${var.name_prefex}-ec2-role"
+  name = "${var.name_prefix}-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
