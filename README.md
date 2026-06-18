@@ -1,5 +1,7 @@
 # 🩺 Terraform Triage: Debug a Broken CI/CD Pipeline
 
+garyrutland
+
 ## 🛑 Prerequisites
 
 Before beginning this workshop, please ensure your environment is correctly set up by following the instructions in our prerequisites documentation:
