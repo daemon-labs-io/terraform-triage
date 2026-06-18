@@ -1,5 +1,5 @@
 output "instance_id" {
-  description = "EC2 instance ID, useful for `aws ssm start-session`."  
+  description = "EC2 instance ID, useful for `aws ssm start-session`."
   value       = aws_instance.web.id
 }
 
