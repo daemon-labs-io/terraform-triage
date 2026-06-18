@@ -15,7 +15,7 @@ data "aws_ami" "al2023" {
 
   filter {
     name   = "name"
-    values = ["al2023-ami-2022.*-x86_64"]
+    values = ["al2023-ami-2023.*-x86_64"]
   }
 
   filter {
@@ -30,7 +30,7 @@ data "aws_ami" "al2023" {
 }
 
 resource "aws_iam_role" "ec2" {
-  name = "${var.name_prefex}-ec2-role"
+  name = "${var.name_prefix}-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -94,9 +94,9 @@ resource "aws_security_group" "web" {
 
 resource "aws_instance" "web" {
   ami                    = data.aws_ami.al2023.id
-  instance_typ           = var.instance_type
+  instance_type          = var.instance_type
   subnet_id              = data.aws_subnets.default.ids[0]
-  vpc_security_group_ids = aws_security_group.web.id
+  vpc_security_group_ids = [aws_security_group.web.id]
   iam_instance_profile   = aws_iam_instance_profile.ec2.name
 
   user_data = <<-EOT
