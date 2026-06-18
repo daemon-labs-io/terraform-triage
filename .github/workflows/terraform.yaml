@@ -12,8 +12,8 @@ permissions:
   contents: read
   id-token: write
 env:
-  TF_CLI_ARGS_init: -backend-config=key=participants/${{ github.actor }}/terraform.tfstate
-  TF_VAR_name_prefix: triage-${{ github.actor }}
+  TF_CLI_ARGS_init: -backend-config=key=participants/${{ github.actor }}-test/terraform.tfstate
+  TF_VAR_name_prefix: triage-${{ github.actor }}-test
 jobs:
   terraform:
     runs-on: ubuntu-latest
